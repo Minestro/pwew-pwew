@@ -3,7 +3,7 @@ var Player = function(name, color, position, direction) {
     this.name = name;
     this.position = position;
     this.life = 3;
-    this.bullets = new Array();
+    this.bullets = [];
     this.direction = direction;
     this.speed = 0;
 
@@ -22,6 +22,9 @@ var Player = function(name, color, position, direction) {
 
     this.graphic = new THREE.Mesh(sphere, this.material);
     this.graphic.position.z = 6;
+    this.graphic.position.x = this.position.x;
+    this.graphic.position.y = this.position.y;
+
     this.graphic.rotateOnAxis(new THREE.Vector3(0,0,1), this.direction);
 };
 
@@ -40,7 +43,7 @@ Player.prototype.dead = function () {
         $("#container").html("");
         jQuery('#'+this.name+' >.life').text("Tu es mort !");
         init();
-}
+};
 
 Player.prototype.decelerate = function (distance) {
     var min = -1;
@@ -53,7 +56,7 @@ Player.prototype.decelerate = function (distance) {
 
 Player.prototype.displayInfo = function () {
     jQuery('#'+this.name+' >.life').text(this.life);
-}
+};
 
 Player.prototype.turnRight = function (angle) {
     this.direction -= angle;
@@ -80,7 +83,9 @@ Player.prototype.move = function () {
         this.speed = this.speed + 0.04
     }
 
-    light1.position.x = this.graphic.position.x;
-    light1.position.y = this.graphic.position.y;
-   // light1.position.z = this.graphic.position.z + 500;
+    if (this.name === "player1") {
+        light1.position.x = this.graphic.position.x;
+        light1.position.y = this.graphic.position.y;
+        light1.position.z = this.graphic.position.z + LIGHT_HEIGHT;
+    }
 };

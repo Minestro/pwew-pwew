@@ -1,3 +1,17 @@
+const LIGHT_HEIGHT = 20;
+const NB_ENEMIES = 5;
+const NB_TILES = 10;
+
+function isItemInArray(array, item) {
+    for (var i = 0; i < array.length; i++) {
+        // This if statement depends on the format of your array
+        if (array[i][0] === item[0] && array[i][1] === item[1]) {
+            return true;   // Found it
+        }
+    }
+    return false;   // Not found
+}
+
 function init()
 {
     // set some camera attributes
@@ -23,12 +37,32 @@ function init()
     $container.append(renderer.domElement);
 
     noGround = [];
-    ground = new Ground(0xffffff, WIDTH, HEIGHT, 10);
+    entitiesList = [];
+    ground = new Ground(0xffffff, WIDTH, HEIGHT, NB_TILES);
     
-    player1 = new Player("player1", 0xffff00, new THREE.Vector2(50, 0), 0);
+    player1 = new Player("player1", 0xffff00, new THREE.Vector2(0, 0), 0);
     scene.add(player1.graphic);
+    entitiesList.push([0, 0]);
 
-    light1 = new Light("sun", 0xffffff, "0,0,20");
+    const sizeOfTileX = WIDTH / NB_TILES;
+    const sizeOfTileY = HEIGHT / NB_TILES;
+
+    for (var i = 0; i < NB_ENEMIES; i++) {
+        do {
+            var random_x = Math.floor(Math.random() * NB_TILES) - NB_TILES / 2;
+            var random_y = Math.floor(Math.random() * NB_TILES) - NB_TILES / 2;
+
+            var x = random_x * sizeOfTileX;
+            var y = random_y * sizeOfTileY;
+        } while (isItemInArray(noGround, [x, y]) || isItemInArray(entitiesList, [x, y]));
+
+        let enemy = new Player("player" + (2 + i).toString(), 0xffff00, new THREE.Vector2(x, y), 0);
+        entitiesList.push([x, y]);
+        scene.add(enemy.graphic);
+    }
+
+    let position = "0,0," + LIGHT_HEIGHT.toString();
+    light1 = new Light("sun", 0xffffff, position);
     scene.add(light1);
 }
 
@@ -52,7 +86,7 @@ function Ground(color, size_x, size_y, nb_tile)
                 color = colors[Math.floor(Math.random()*colors.length)];
             }
        
-            if (0x000000 != color)
+            if (0x000000 !== color)
             {
                 tmpGround = new THREE.Mesh(
                 new THREE.PlaneGeometry(sizeOfTileX-10, sizeOfTileY-10),
