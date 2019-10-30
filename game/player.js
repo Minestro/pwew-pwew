@@ -1,3 +1,5 @@
+const PLAYER_RADIUS = 6;
+
 var Player = function(name, color, position, direction) {
 
     this.name = name;
@@ -14,7 +16,7 @@ var Player = function(name, color, position, direction) {
     bumperMesh = new THREE.Mesh(new THREE.CylinderGeometry(0, 10, 10, 12, 12, false), this.materialBumper);
     bumperMesh.rotation.x = Math.PI / 2 ;
 
-    sphere = new THREE.SphereGeometry(6, 8, 8);
+    sphere = new THREE.SphereGeometry(PLAYER_RADIUS, 8, 8);
     THREE.GeometryUtils.merge(sphere, bumperMesh);
 
     canon = new THREE.CubeGeometry(3, 3, 15);
@@ -42,6 +44,9 @@ Player.prototype.dead = function () {
         //Nettoyage de la div container
         $("#container").html("");
         jQuery('#'+this.name+' >.life').text("Tu es mort !");
+        if (this.name === "player1") {
+            lifes--;
+        }
         init();
 };
 

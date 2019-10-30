@@ -1,5 +1,5 @@
 const LIGHT_HEIGHT = 20;
-const NB_ENEMIES = 5;
+const NB_ENEMIES = 7;
 const NB_TILES = 10;
 
 function isItemInArray(array, item) {
@@ -38,6 +38,7 @@ function init()
 
     noGround = [];
     entitiesList = [];
+    enemiesList = [];
     ground = new Ground(0xffffff, WIDTH, HEIGHT, NB_TILES);
     
     player1 = new Player("player1", 0xffff00, new THREE.Vector2(0, 0), 0);
@@ -57,6 +58,7 @@ function init()
         } while (isItemInArray(noGround, [x, y]) || isItemInArray(entitiesList, [x, y]));
 
         let enemy = new Player("player" + (2 + i).toString(), 0xffff00, new THREE.Vector2(x, y), 0);
+        enemiesList.push(enemy);
         entitiesList.push([x, y]);
         scene.add(enemy.graphic);
     }
